@@ -21,9 +21,9 @@ afterSign: "scripts/afterSign.js"
 win:
   icon: buildResources/ScratchDesktop.ico
   target:
-    #- zip
-    - appx
-    - nsis
+    - zip
+    #- appx
+    #- nsis
 #appx:
 #  identityName: ScratchFoundation.ScratchDesktop
 #  publisherDisplayName: "Scratch Foundation"
