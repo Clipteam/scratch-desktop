@@ -46,13 +46,14 @@ const runBuilder = function (targetGroup) {
     // the appx build fails if CSC_* or WIN_CSC_* variables are set
     const shouldStripCSC = (targetGroup === 'appx');
     const childEnvironment = shouldStripCSC ? stripCSC(process.env) : process.env;
-    //if ((targetGroup === 'nsis') && !(childEnvironment.CSC_LINK || childEnvironment.WIN_CSC_LINK)) {
-    //    throw new Error(`NSIS build requires CSC_LINK or WIN_CSC_LINK`);
-    //}
+    if ((targetGroup === 'nsis') && !(childEnvironment.CSC_LINK || childEnvironment.WIN_CSC_LINK)) {
+        throw new Error(`NSIS build requires CSC_LINK or WIN_CSC_LINK`);
+    }
     const platformFlag = getPlatformFlag();
-    const command = `electron-builder ${platformFlag} ${targetGroup}`;
-    console.log(`running: ${command}`);
-    const result = spawnSync(command, {
+    const customArgs = process.argv.slice(2); // remove `node` and `this-script.js`
+    const allArgs = [platformFlag, targetGroup, ...customArgs];
+    console.log(`running electron-builder with arguments: ${allArgs}`);
+    const result = spawnSync('electron-builder', allArgs, {
         env: childEnvironment,
         shell: true,
         stdio: 'inherit'
@@ -76,12 +77,15 @@ const calculateTargets = function () {
     switch (process.platform) {
     case 'win32':
         // run in two passes so we can skip signing the appx
-        return ['nsis'];
+        //return ['nsis:ia32', 'appx'];
+        return ['zip'];
     case 'darwin':
         // Running 'dmg' and 'mas' in the same pass causes electron-builder to skip signing the non-MAS app copy.
         // Running them as separate passes means they both get signed.
         // Seems like a bug in electron-builder...
-        return ['dmg', 'mas'];
+        // Running the 'mas' build first means that its output is available while we wait for 'dmg' notarization.
+        // Add 'mas-dev' here to test a 'mas'-like build locally. You'll need a Mac Developer provisioning profile.
+        return ['mas', 'dmg'];
     }
     throw new Error(`Could not determine targets for platform: ${process.platform}`);
 };
