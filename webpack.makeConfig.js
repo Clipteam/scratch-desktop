@@ -115,7 +115,7 @@ const makeConfig = function (defaultConfig, options) {
             alias: {
                 // act like scratch-gui has this line in its package.json:
                 //   "browser": "./src/index.js"
-                'scratch-gui$': path.resolve(__dirname, 'node_modules', 'scratch-gui', 'src', 'index.js')
+                'clipcc-gui$': path.resolve(__dirname, 'node_modules', 'clipcc-gui', 'src', 'index.js')
             }
         }
     });

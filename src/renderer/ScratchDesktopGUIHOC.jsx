@@ -4,7 +4,7 @@ import omit from 'lodash.omit';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
-import GUIComponent from 'scratch-gui/src/components/gui/gui.jsx';
+import GUIComponent from 'clipcc-gui/src/components/gui/gui.jsx';
 
 import {
     LoadingStates,
@@ -14,12 +14,12 @@ import {
     requestNewProject,
     requestProjectUpload,
     setProjectId
-} from 'scratch-gui/src/reducers/project-state';
+} from 'clipcc-gui/src/reducers/project-state';
 import {
     openLoadingProject,
     closeLoadingProject,
     openTelemetryModal
-} from 'scratch-gui/src/reducers/modals';
+} from 'clipcc-gui/src/reducers/modals';
 
 import ElectronStorageHelper from '../common/ElectronStorageHelper';
 
