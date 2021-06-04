@@ -5,7 +5,7 @@ copyright: Copyright © 2019-2020 Clip Team.
 compression: normal
 directories:
   buildResources: buildResources
-  output: dist/
+  output: dist
 win:
   target: [ zip, nsis ]
 linux:
