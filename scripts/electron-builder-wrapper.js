@@ -78,14 +78,16 @@ const calculateTargets = function () {
     case 'win32':
         // run in two passes so we can skip signing the appx
         //return ['nsis:ia32', 'appx'];
-        return ['zip'];
+        return ['zip', 'nsis'];
     case 'darwin':
         // Running 'dmg' and 'mas' in the same pass causes electron-builder to skip signing the non-MAS app copy.
         // Running them as separate passes means they both get signed.
         // Seems like a bug in electron-builder...
         // Running the 'mas' build first means that its output is available while we wait for 'dmg' notarization.
         // Add 'mas-dev' here to test a 'mas'-like build locally. You'll need a Mac Developer provisioning profile.
-        return ['mas', 'dmg'];
+        return ['zip', 'mas', 'dmg'];
+    case 'linux':
+        return ['zip', 'deb', 'rpm'];
     }
     throw new Error(`Could not determine targets for platform: ${process.platform}`);
 };

@@ -1,4 +1,4 @@
-import {BrowserWindow, Menu, app, dialog, ipcMain, systemPreferences, protocol} from 'electron';
+import {BrowserWindow, Menu, app, dialog, ipcMain, systemPreferences, globalShortcut} from 'electron';
 import fs from 'fs';
 import path from 'path';
 import {URL} from 'url';
@@ -11,7 +11,12 @@ import log from '../common/log.js';
 // suppress deprecation warning; this will be the default in Electron 9
 app.allowRendererProcessReuse = true;
 
-telemetry.appWasOpened();
+// suppress deprecation warning; this will be the default in Electron 9
+app.allowRendererProcessReuse = true;
+
+global.sharedObject = {
+    argv: process.argv
+};
 
 // const defaultSize = {width: 1096, height: 715}; // minimum
 const defaultSize = {width: 1280, height: 800}; // good for MAS screenshots
@@ -156,10 +161,6 @@ const createWindow = ({search = null, url = 'index.html', ...browserWindowOption
 
     webContents.session.setPermissionRequestHandler(handlePermissionRequest);
 
-    //if (isDevelopment) {
-        webContents.openDevTools({mode: 'detach', activate: true});
-    //}
-
     const fullUrl = makeFullUrl(url, search);
     window.loadURL(fullUrl);
 
@@ -172,7 +173,7 @@ const createAboutWindow = () => {
         height: 400,
         parent: _windows.main,
         search: 'route=about',
-        title: 'About Scratch Desktop'
+        title: 'About ClipCC'
     });
     return window;
 };
@@ -189,7 +190,7 @@ const createMainWindow = () => {
     const window = createWindow({
         width: defaultSize.width,
         height: defaultSize.height,
-        title: 'Scratch Desktop'
+        title: 'ClipCC 3'
     });
     const webContents = window.webContents;
 
@@ -316,6 +317,10 @@ app.on('ready', () => {
     _windows.about.on('close', event => {
         event.preventDefault();
         _windows.about.hide();
+    });
+
+    globalShortcut.register('CommandOrControl+Alt+D', () => {
+        _windows.main.webContents.openDevTools({mode: 'detach', activate: true});
     });
 });
 
